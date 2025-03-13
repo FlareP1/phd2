@@ -42,7 +42,7 @@
 #include <wx/stdpaths.h>
 
 static const int DefaultGuideCameraGain = 95;
-static const int DefaultGuideCameraTimeoutMs = 15000;
+static const int DefaultGuideCameraTimeoutMs = 2000;
 static const bool DefaultUseSubframes = false;
 static const int DefaultReadDelay = 150;
 
@@ -50,139 +50,135 @@ const double GuideCamera::UnknownPixelSize = 0.0;
 
 wxSize UNDEFINED_FRAME_SIZE = wxSize(0, 0);
 
-#if defined(ATIK16)
+#if defined (ATIK16)
 # include "cam_atik16.h"
 #endif
 
-#if defined(IOPTRON_CAMERA)
+#if defined (IOPTRON_CAMERA)
 # include "cam_ioptron.h"
 #endif
 
-#if defined(LE_SERIAL_CAMERA)
+#if defined (LE_SERIAL_CAMERA)
 # include "cam_LESerialWebcam.h"
 #endif
 
-#if defined(LE_PARALLEL_CAMERA)
+#if defined (LE_PARALLEL_CAMERA)
 # include "cam_LEParallelwebcam.h"
 #endif
 
-#if defined(LE_LXUSB_CAMERA)
+#if defined (LE_LXUSB_CAMERA)
 # include "cam_LELXUSBwebcam.h"
 #endif
 
-#if defined(QGUIDE)
+#if defined (SAC42)
+# include "cam_SAC42.h"
+#endif
+
+#if defined (QGUIDE)
 # include "cam_qguide.h"
 #endif
 
-#if defined(CAM_QHY5)
+#if defined (CAM_QHY5)
 # include "cam_qhy5.h"
 #endif
 
-#if defined(PLAYERONE_CAMERA)
-# include "cam_playerone.h"
-#endif
-
-#if defined(QHY_CAMERA)
+#if defined (QHY_CAMERA)
 # include "cam_qhy.h"
 #endif
 
-#if defined(SVB_CAMERA)
+#if defined (SVB_CAMERA)
 # include "cam_svb.h"
 #endif
 
-#if defined(ZWO_ASI)
+#if defined (ZWO_ASI)
 # include "cam_zwo.h"
 #endif
 
-#if defined(TOUPTEK_CAMERA)
+#if defined (TOUPTEK_CAMERA)
 # include "cam_touptek.h"
 #endif
 
-#if defined(SKYRAIDER_CAMERA)
+#if defined (SKYRAIDER_CAMERA)
 # include "cam_skyraider.h"
 #endif
 
-#if defined(ALTAIR)
+#if defined (ALTAIR)
 # include "cam_altair.h"
 #endif
 
-#if defined(ORION_DSCI)
+#if defined (ORION_DSCI)
 # include "cam_StarShootDSCI.h"
 #endif
 
-#if defined(OS_PL130)
+#if defined (OS_PL130)
 # include "cam_OSPL130.h"
 #endif
 
-#if defined(VFW_CAMERA)
+#if defined (VFW_CAMERA)
 # include "cam_vfw.h"
 #endif
 
-#if defined(OGMA_CAMERA)
-# include "cam_ogma.h"
-#endif
-
-#if defined(OPENCV_CAMERA)
+#if defined (OPENCV_CAMERA)
 # include "cam_opencv.h"
 #endif
 
-#if defined(WDM_CAMERA)
+#if defined (WDM_CAMERA)
 # include "cam_wdm.h"
 #endif
 
-#if defined(STARFISH_CAMERA)
+#if defined (STARFISH_CAMERA)
 # include "cam_starfish.h"
 #endif
 
-#if defined(SXV)
+#if defined (SXV)
 # include "cam_sxv.h"
 #endif
 
-#if defined(SBIG)
+#if defined (SBIG)
 # include "cam_sbig.h"
 #endif
 
-#if defined(NEB_SBIG)
+#if defined (NEB_SBIG)
 # include "cam_NebSBIG.h"
 #endif
 
-#if defined(FIREWIRE_CAMERA)
+#if defined (FIREWIRE_CAMERA)
 # include "cam_firewire.h"
 #endif
 
-#if defined(MEADE_DSI_CAMERA)
+#if defined (MEADE_DSI_CAMERA)
 # include "cam_MeadeDSI.h"
 #endif
 
-#if defined(MORAVIAN_CAMERA)
+#if defined (MORAVIAN_CAMERA)
 # include "cam_moravian.h"
 #endif
 
-#if defined(SSAG)
+#if defined (SSAG)
 # include "cam_ssag.h"
 #endif
 
-#if defined(OPENSSAG_CAMERA)
+#if defined (OPENSSAG_CAMERA)
 # include "cam_openssag.h"
 #endif
 
-#if defined(KWIQGUIDER_CAMERA)
+#if defined (KWIQGUIDER_CAMERA)
 # include "cam_KWIQGuider.h"
 #endif
 
-#if defined(SSPIAG)
+#if defined (SSPIAG)
 # include "cam_sspiag.h"
 #endif
 
-#if defined(INOVA_PLC)
+#if defined (INOVA_PLC)
 # include "cam_INovaPLC.h"
 #endif
 
-#if defined(ASCOM_CAMERA)
+#if defined (ASCOM_CAMERA)
 # include "cam_ascom.h"
 #endif
 
-#if defined(INDI_CAMERA)
+#if defined (INDI_CAMERA)
 # include "cam_indi.h"
 #endif
 
@@ -190,11 +186,10 @@ wxSize UNDEFINED_FRAME_SIZE = wxSize(0, 0);
 # include "cam_sbigrotator.h"
 #endif
 
-#if defined(V4L_CAMERA)
+#if defined (V4L_CAMERA)
 # include "cam_VIDEODEVICE.h"
-extern "C"
-{
-# include <libudev.h>
+extern "C" {
+#include <libudev.h>
 }
 #endif
 
@@ -253,133 +248,129 @@ wxArrayString GuideCamera::GuideCameraList()
     wxArrayString CameraList;
 
     CameraList.Add(_("None"));
-#if defined(ASCOM_CAMERA)
+#if defined (ASCOM_CAMERA)
     wxArrayString ascomCameras = ASCOMCameraFactory::EnumAscomCameras();
     for (unsigned int i = 0; i < ascomCameras.Count(); i++)
         CameraList.Add(ascomCameras[i]);
 #endif
-#if defined(ATIK16)
+#if defined (ATIK16)
     CameraList.Add(_T("Atik 16 series, mono"));
     CameraList.Add(_T("Atik 16 series, color"));
 #endif
-#if defined(ATIK_GEN3)
+#if defined (ATIK_GEN3)
     CameraList.Add(_T("Atik Gen3, mono"));
     CameraList.Add(_T("Atik Gen3, color"));
 #endif
-#if defined(QGUIDE)
+#if defined (QGUIDE)
     CameraList.Add(_T("CCD Labs Q-Guider"));
 #endif
-#if defined(STARFISH_CAMERA)
+#if defined (STARFISH_CAMERA)
     CameraList.Add(_T("Fishcamp Starfish"));
 #endif
-#if defined(INOVA_PLC)
+#if defined (INOVA_PLC)
     CameraList.Add(_T("i-Nova PLC-M"));
 #endif
-#if defined(IOPTRON_CAMERA)
+#if defined (IOPTRON_CAMERA)
     CameraList.Add(_T("iOptron iGuider"));
 #endif
-#if defined(SSAG)
+#if defined (SSAG)
     CameraList.Add(_T("StarShoot Autoguider"));
 #endif
-#if defined(SSPIAG)
+#if defined (SSPIAG)
     CameraList.Add(_T("StarShoot Planetary Imager & Autoguider"));
 #endif
-#if defined(OS_PL130)
+#if defined (OS_PL130)
     CameraList.Add(_T("Opticstar PL-130M"));
     CameraList.Add(_T("Opticstar PL-130C"));
 #endif
-#if defined(ORION_DSCI)
+#if defined (ORION_DSCI)
     CameraList.Add(_T("Orion StarShoot DSCI"));
 #endif
-#if defined(OPENSSAG_CAMERA)
+#if defined (OPENSSAG_CAMERA)
     CameraList.Add(_T("Orion StarShoot Autoguider"));
 #endif
-#if defined(KWIQGUIDER_CAMERA)
+#if defined (KWIQGUIDER_CAMERA)
     CameraList.Add(_T("KWIQGuider"));
 #endif
-#if defined(QGUIDE)
+#if defined (QGUIDE)
     CameraList.Add(_T("MagZero MZ-5"));
 #endif
-#if defined(MEADE_DSI_CAMERA)
+#if defined (MEADE_DSI_CAMERA)
     CameraList.Add(_T("Meade DSI I, II, or III"));
 #endif
-#if defined(MORAVIAN_CAMERA)
+#if defined (MORAVIAN_CAMERA)
     CameraList.Add(_T("Moravian Camera"));
 #endif
-#if defined(PLAYERONE_CAMERA)
-    CameraList.Add(_T("Player One Camera"));
-#endif
-#if defined(CAM_QHY5)
+#if defined (CAM_QHY5)
     CameraList.Add(_T("QHY 5"));
 #endif
-#if defined(QHY_CAMERA)
+#if defined (QHY_CAMERA)
     CameraList.Add(_T("QHY Camera"));
 #endif
-#if defined(ALTAIR)
-    CameraList.Add(_T("Altair Camera"));
+#if defined (ALTAIR)
+	CameraList.Add(_T("Altair Camera"));
     CameraList.Add(_T("Altair Camera (2015/2016)"));
 #endif
-#if defined(ZWO_ASI)
+#if defined (ZWO_ASI)
     CameraList.Add(_T("ZWO ASI Camera"));
 #endif
-#if defined(TOUPTEK_CAMERA)
+#if defined (TOUPTEK_CAMERA)
     CameraList.Add(_T("ToupTek Camera"));
     CameraList.Add(_T("Omegon Pro Camera"));
 #endif
-#if defined(SKYRAIDER_CAMERA)
+#if defined (SKYRAIDER_CAMERA)
     CameraList.Add(_T("MallinCam SkyRaider"));
 #endif
-#if defined(SBIG)
+#if defined (SAC42)
+    CameraList.Add(_T("SAC4-2"));
+#endif
+#if defined (SBIG)
     CameraList.Add(_T("SBIG"));
 #endif
-#if defined(SBIGROTATOR_CAMERA)
+#if defined (SBIGROTATOR_CAMERA)
     CameraList.Add(_T("SBIG Rotator"));
 #endif
-#if defined(SVB_CAMERA)
+#if defined (SVB_CAMERA)
     CameraList.Add(_T("Svbony Camera"));
 #endif
-#if defined(SXV)
+#if defined (SXV)
     CameraList.Add(_T("Starlight Xpress SXV"));
 #endif
-#if defined(FIREWIRE_CAMERA)
+#if defined (FIREWIRE_CAMERA)
     CameraList.Add(_T("The Imaging Source (DCAM Firewire)"));
 #endif
-#if defined(OGMA_CAMERA)
-    CameraList.Add(_T("OGMA Camera"));
-#endif
-#if defined(OPENCV_CAMERA)
+#if defined (OPENCV_CAMERA)
     CameraList.Add(_T("OpenCV webcam 1"));
     CameraList.Add(_T("OpenCV webcam 2"));
 #endif
-#if defined(WDM_CAMERA)
+#if defined (WDM_CAMERA)
     CameraList.Add(_T("Windows WDM-style webcam camera"));
 #endif
-#if defined(VFW_CAMERA)
+#if defined (VFW_CAMERA)
     CameraList.Add(_T("Windows VFW-style webcam camera (older & SAC8)"));
 #endif
-#if defined(LE_LXUSB_CAMERA)
+#if defined (LE_LXUSB_CAMERA)
     CameraList.Add(_T("Long exposure LXUSB webcam"));
 #endif
-#if defined(LE_PARALLEL_CAMERA)
+#if defined (LE_PARALLEL_CAMERA)
     CameraList.Add(_T("Long exposure Parallel webcam"));
 #endif
-#if defined(LE_SERIAL_CAMERA)
+#if defined (LE_SERIAL_CAMERA)
     CameraList.Add(_T("Long exposure Serial webcam"));
 #endif
-#if defined(INDI_CAMERA)
+#if defined (INDI_CAMERA)
     CameraList.Add(INDICamName());
 #endif
-#if defined(V4L_CAMERA)
-    if (true == Camera_VIDEODEVICE.ProbeDevices())
-    {
+#if defined (V4L_CAMERA)
+    if (true == Camera_VIDEODEVICE.ProbeDevices()) {
         CameraList.Add(_T("V4L(2) Camera"));
     }
 #endif
-#if defined(SIMULATOR)
+#if defined (SIMULATOR)
     CameraList.Add(_T("Simulator"));
 #endif
 
-#if defined(NEB_SBIG)
+#if defined (NEB_SBIG)
     CameraList.Add(_T("Guide chip on SBIG cam in Nebulosity"));
 #endif
 
@@ -406,19 +397,17 @@ GuideCamera *GuideCamera::Factory(const wxString& choice)
         }
 
         // Chack ASCOM and INDI first since those choices may match match other choices below (like Simulator)
-#if defined(ASCOM_CAMERA)
-        else if (choice.Contains(_T("ASCOM")))
-        {
+#if defined (ASCOM_CAMERA)
+        else if (choice.Contains(_T("ASCOM"))) {
             pReturn = ASCOMCameraFactory::MakeASCOMCamera(choice);
         }
 #endif
-#if defined(INDI_CAMERA)
-        else if (choice.Contains(_T("INDI")))
-        {
+#if defined (INDI_CAMERA)
+        else if (choice.Contains(_T("INDI"))) {
             pReturn = INDICameraFactory::MakeINDICamera();
         }
 #endif
-#if defined(IOPTRON_CAMERA)
+#if defined (IOPTRON_CAMERA)
         else if (choice == _T("iOptron iGuider"))
             pReturn = IoptronCameraFactory::MakeIoptronCamera();
 #endif
@@ -426,7 +415,11 @@ GuideCamera *GuideCamera::Factory(const wxString& choice)
             pReturn = nullptr;
         else if (choice == _T("Simulator"))
             pReturn = GearSimulator::MakeCamSimulator();
-#if defined(ATIK16)
+#if defined (SAC42)
+        else if (choice.Contains(_T("SAC4-2")))
+            pReturn = new CameraSAC42();
+#endif
+#if defined (ATIK16)
         else if (choice.StartsWith("Atik 16 series"))
         {
             bool hsmodel = false;
@@ -434,7 +427,7 @@ GuideCamera *GuideCamera::Factory(const wxString& choice)
             pReturn = AtikCameraFactory::MakeAtikCamera(hsmodel, color);
         }
 #endif
-#if defined(ATIK_GEN3)
+#if defined (ATIK_GEN3)
         else if (choice.StartsWith(_T("Atik Gen3")))
         {
             bool hsmodel = true;
@@ -442,7 +435,7 @@ GuideCamera *GuideCamera::Factory(const wxString& choice)
             pReturn = AtikCameraFactory::MakeAtikCamera(hsmodel, color);
         }
 #endif
-#if defined(QGUIDE)
+#if defined (QGUIDE)
         else if (choice.Contains(_T("CCD Labs Q-Guider")))
         {
             pReturn = new CameraQGuider();
@@ -454,11 +447,7 @@ GuideCamera *GuideCamera::Factory(const wxString& choice)
             pReturn->Name = _T("MagZero MZ-5");
         }
 #endif
-#if defined(PLAYERONE_CAMERA)
-        else if (choice == _T("Player One Camera"))
-            pReturn = PlayerOneCameraFactory::MakePlayerOneCamera();
-#endif
-#if defined(QHY_CAMERA)
+#if defined (QHY_CAMERA)
         else if (choice == _T("QHY Camera"))
             pReturn = QHYCameraFactory::MakeQHYCamera();
 #endif
@@ -473,7 +462,8 @@ GuideCamera *GuideCamera::Factory(const wxString& choice)
             pReturn = ZWOCameraFactory::MakeZWOCamera();
 #endif
 #if defined(TOUPTEK_CAMERA)
-        else if (choice == _T("ToupTek Camera") || choice == _T("Omegon Pro Camera"))
+        else if (choice == _T("ToupTek Camera") ||
+                 choice == _T("Omegon Pro Camera"))
         {
             pReturn = ToupTekCameraFactory::MakeToupTekCamera();
         }
@@ -482,27 +472,27 @@ GuideCamera *GuideCamera::Factory(const wxString& choice)
         else if (choice == _T("MallinCam SkyRaider"))
             pReturn = SkyraiderCameraFactory::MakeSkyraiderCamera();
 #endif
-#if defined(CAM_QHY5) // must come afer other QHY 5's since this pattern would match them
+#if defined (CAM_QHY5) // must come afer other QHY 5's since this pattern would match them
         else if (choice.Contains(_T("QHY 5")))
             pReturn = new CameraQHY5();
 #endif
-#if defined(OPENSSAG_CAMERA)
+#if defined (OPENSSAG_CAMERA)
         else if (choice.Contains(_T("Orion StarShoot Autoguider")))
             pReturn = new CameraOpenSSAG();
 #endif
-#if defined(KWIQGUIDER_CAMERA)
+#if defined (KWIQGUIDER_CAMERA)
         else if (choice.Contains(_T("KWIQGuider")))
             pReturn = KWIQGuiderCameraFactory::MakeKWIQGuiderCamera();
 #endif
-#if defined(SSAG)
+#if defined (SSAG)
         else if (choice.Contains(_T("StarShoot Autoguider")))
             pReturn = SSAGCameraFactory::MakeSSAGCamera();
 #endif
-#if defined(SSPIAG)
+#if defined (SSPIAG)
         else if (choice.Contains(_T("StarShoot Planetary Imager & Autoguider")))
             pReturn = new CameraSSPIAG();
 #endif
-#if defined(ORION_DSCI)
+#if defined (ORION_DSCI)
         else if (choice.Contains(_T("Orion StarShoot DSCI")))
             pReturn = new CameraStarShootDSCI();
 #endif
@@ -510,11 +500,7 @@ GuideCamera *GuideCamera::Factory(const wxString& choice)
         else if (choice == _T("Svbony Camera"))
             pReturn = SVBCameraFactory::MakeSVBCamera();
 #endif
-#if defined(OGMA_CAMERA)
-        else if (choice == _T("OGMA Camera"))
-            pReturn = OGMACameraFactory::MakeOGMACamera();
-#endif
-#if defined(OPENCV_CAMERA)
+#if defined (OPENCV_CAMERA)
         else if (choice.Contains(_T("OpenCV webcam")))
         {
             int dev = 0;
@@ -525,27 +511,27 @@ GuideCamera *GuideCamera::Factory(const wxString& choice)
             pReturn = new CameraOpenCV(dev);
         }
 #endif
-#if defined(WDM_CAMERA)
+#if defined (WDM_CAMERA)
         else if (choice.Contains(_T("Windows WDM")))
             pReturn = WDMCameraFactory::MakeWDMCamera();
 #endif
-#if defined(VFW_CAMERA)
+#if defined (VFW_CAMERA)
         else if (choice.Contains(_T("Windows VFW")))
             pReturn = new CameraVFW();
 #endif
-#if defined(LE_SERIAL_CAMERA)
+#if defined (LE_SERIAL_CAMERA)
         else if (choice.Contains(_T("Long exposure Serial webcam")))
             pReturn = LESerialWebcamCameraFactory::MakeLESerialWebcamCamera();
 #endif
-#if defined(LE_PARALLEL_CAMERA)
-        else if (choice.Contains(_T("Long exposure Parallel webcam")))
+#if defined (LE_PARALLEL_CAMERA)
+        else if (choice.Contains( _T("Long exposure Parallel webcam")))
             pReturn = LEParallelWebcamCameraFactory::MakeLEParallelWebcamCamera();
 #endif
-#if defined(LE_LXUSB_CAMERA)
+#if defined (LE_LXUSB_CAMERA)
         else if (choice.Contains(_T("Long exposure LXUSB webcam")))
             pReturn = LELxUsbWebcamCameraFactory::MakeLELxUsbWebcamCamera();
 #endif
-#if defined(MEADE_DSI_CAMERA)
+#if defined (MEADE_DSI_CAMERA)
         else if (choice.Contains(_T("Meade DSI I, II, or III")))
             pReturn = DSICameraFactory::MakeDSICamera();
 #endif
@@ -553,15 +539,15 @@ GuideCamera *GuideCamera::Factory(const wxString& choice)
         else if (choice == _T("Moravian Camera"))
             pReturn = MoravianCameraFactory::MakeMoravianCamera();
 #endif
-#if defined(STARFISH_CAMERA)
+#if defined (STARFISH_CAMERA)
         else if (choice.Contains(_T("Fishcamp Starfish")))
             pReturn = StarfishCameraFactory::MakeStarfishCamera();
 #endif
-#if defined(SXV)
+#if defined (SXV)
         else if (choice.Contains(_T("Starlight Xpress SXV")))
             pReturn = SXVCameraFactory::MakeSXVCamera();
 #endif
-#if defined(OS_PL130)
+#if defined (OS_PL130)
         else if (choice.Contains(_T("Opticstar PL-130M")))
         {
             Camera_OSPL130.Color = false;
@@ -575,28 +561,28 @@ GuideCamera *GuideCamera::Factory(const wxString& choice)
             pReturn = new Camera_OSPL130Class();
         }
 #endif
-#if defined(NEB_SBIG)
+#if defined (NEB_SBIG)
         else if (choice.Contains(_T("Nebulosity")))
             pReturn = new CameraNebSBIG();
 #endif
-#if defined(SBIGROTATOR_CAMERA)
+#if defined (SBIGROTATOR_CAMERA)
         // must go above SBIG
         else if (choice.Contains(_T("SBIG Rotator")))
             pReturn = SBIGRotatorCameraFactory::MakeSBIGRotatorCamera();
 #endif
-#if defined(SBIG)
+#if defined (SBIG)
         else if (choice.Contains(_T("SBIG")))
             pReturn = SBIGCameraFactory::MakeSBIGCamera();
 #endif
-#if defined(FIREWIRE_CAMERA)
+#if defined (FIREWIRE_CAMERA)
         else if (choice.Contains(_T("The Imaging Source (DCAM Firewire)")))
             pReturn = new CameraFirewire();
 #endif
-#if defined(INOVA_PLC)
+#if defined (INOVA_PLC)
         else if (choice.Contains(_T("i-Nova PLC-M")))
             pReturn = new CameraINovaPLC();
 #endif
-#if defined(V4L_CAMERA)
+#if defined (V4L_CAMERA)
         else if (choice.Contains(_T("V4L(2) Camera")))
         {
             // There is at least ONE V4L(2) device ... let's find out exactly
@@ -617,8 +603,7 @@ GuideCamera *GuideCamera::Factory(const wxString& choice)
                 wxArrayString choices;
                 int choice = 0;
 
-                if ((choice = wxGetSinglechoiceIndex(_("Select your camera"), _T("V4L(2) devices"),
-                                                     Camera_VIDEODEVICE.GetProductArray(choices))) != -1)
+                if ((choice = wxGetSinglechoiceIndex(_("Select your camera"), _T("V4L(2) devices"), Camera_VIDEODEVICE.GetProductArray(choices))) != -1)
                 {
                     deviceInfo = Camera_VIDEODEVICE.GetDeviceAtIndex(choice);
 
@@ -797,8 +782,8 @@ CameraConfigDialogPane *GuideCamera::GetConfigDialogPane(wxWindow *pParent)
 
 static wxSpinCtrl *NewSpinnerInt(wxWindow *parent, int width, int val, int minval, int maxval, int inc)
 {
-    wxSpinCtrl *pNewCtrl = pFrame->MakeSpinCtrl(parent, wxID_ANY, _T(" "), wxDefaultPosition, wxSize(width, -1),
-                                                wxSP_ARROW_KEYS, minval, maxval, val);
+    wxSpinCtrl *pNewCtrl = pFrame->MakeSpinCtrl(parent, wxID_ANY, _T(" "), wxDefaultPosition,
+        wxSize(width, -1), wxSP_ARROW_KEYS, minval, maxval, val);
     pNewCtrl->SetValue(val);
     return pNewCtrl;
 }
@@ -806,8 +791,8 @@ static wxSpinCtrl *NewSpinnerInt(wxWindow *parent, int width, int val, int minva
 static wxSpinCtrlDouble *NewSpinnerDouble(wxWindow *parent, int width, double val, double minval, double maxval, double inc,
                                           const wxString& tooltip)
 {
-    wxSpinCtrlDouble *pNewCtrl = pFrame->MakeSpinCtrlDouble(parent, wxID_ANY, _T(" "), wxDefaultPosition, wxSize(width, -1),
-                                                            wxSP_ARROW_KEYS, minval, maxval, val, inc);
+    wxSpinCtrlDouble *pNewCtrl = pFrame->MakeSpinCtrlDouble(parent, wxID_ANY, _T(" "), wxDefaultPosition,
+        wxSize(width, -1), wxSP_ARROW_KEYS, minval, maxval, val, inc);
     pNewCtrl->SetDigits(2);
     pNewCtrl->SetToolTip(tooltip);
     return pNewCtrl;
@@ -837,28 +822,35 @@ void CameraConfigDialogPane::LayoutControls(GuideCamera *pCamera, BrainCtrlIdMap
     pGenGroup->Add(pTopline, def_flags);
     pGenGroup->Add(GetSizerCtrl(CtrlMap, AD_szVariableExposureDelay), def_flags);
     pGenGroup->Add(GetSizerCtrl(CtrlMap, AD_szAutoExposure), def_flags);
-
     pGenGroup->Layout();
 
     // Specific controls
     wxStaticBoxSizer *pSpecGroup = new wxStaticBoxSizer(wxVERTICAL, m_pParent, _("Camera-Specific Properties"));
     if (pCamera)
     {
-        wxFlexGridSizer *pDetailsSizer = new wxFlexGridSizer(6, 3, 15, 15); // Will auto-shrink to fit
-        // Create all possible property controls then disable individual controls later if camera doesn't support them.  This is
-        // safer for "omnibus" style drivers that handle many cameras with different capabilities.  Exceptions are 'port' and
-        // 'LE-delay' which will be created conditionally
+        int numItems = 3;
+        if (pCamera->HasGainControl) ++numItems;
+        if (pCamera->HasDelayParam)  ++numItems;
+        if (pCamera->HasPortNum)     ++numItems;
+        if (pCamera->MaxBinning > 1) ++numItems;
+        if (pCamera->HasCooler)      ++numItems;
+        wxFlexGridSizer *pDetailsSizer = new wxFlexGridSizer((numItems + 1) / 2, 3, 15, 15);
+
         wxSizerFlags spec_flags = wxSizerFlags(0).Border(wxALL, 10).Align(wxVERTICAL).Expand();
         pDetailsSizer->Add(GetSizerCtrl(CtrlMap, AD_szPixelSize));
-        pDetailsSizer->Add(GetSizerCtrl(CtrlMap, AD_szGain));
+        if (pCamera->HasGainControl)
+            pDetailsSizer->Add(GetSizerCtrl(CtrlMap, AD_szGain));
         pDetailsSizer->Add(GetSizerCtrl(CtrlMap, AD_szCameraTimeout));
-        pDetailsSizer->Add(GetSizerCtrl(CtrlMap, AD_szBinning));
-        pDetailsSizer->Add(GetSingleCtrl(CtrlMap, AD_cbUseSubFrames), wxSizerFlags().Border(wxTOP, 3));
-        pDetailsSizer->Add(GetSizerCtrl(CtrlMap, AD_szCooler));
         if (pCamera->HasDelayParam)
             pDetailsSizer->Add(GetSizerCtrl(CtrlMap, AD_szDelay));
         if (pCamera->HasPortNum)
             pDetailsSizer->Add(GetSizerCtrl(CtrlMap, AD_szPort));
+        if (pCamera->MaxBinning > 1)
+            pDetailsSizer->Add(GetSizerCtrl(CtrlMap, AD_szBinning));
+        if (pCamera->HasSubframes)
+            pDetailsSizer->Add(GetSingleCtrl(CtrlMap, AD_cbUseSubFrames), wxSizerFlags().Border(wxTOP, 3));
+        if (pCamera->HasCooler)
+            pDetailsSizer->Add(GetSizerCtrl(CtrlMap, AD_szCooler));
         pSpecGroup->Add(pDetailsSizer, spec_flags);
         pSpecGroup->Layout();
     }
@@ -867,73 +859,85 @@ void CameraConfigDialogPane::LayoutControls(GuideCamera *pCamera, BrainCtrlIdMap
         wxStaticText *pNoCam = new wxStaticText(m_pParent, wxID_ANY, _("No camera specified"));
         pSpecGroup->Add(pNoCam, wxSizerFlags().Align(wxALIGN_CENTER_HORIZONTAL));
         pSpecGroup->Layout();
+
     }
-    if (pCamera)
-        pGenGroup->Add(GetSizerCtrl(CtrlMap, AD_szSaturationOptions), wxSizerFlags(0).Border(wxALL, 2).Expand());
     this->Add(pGenGroup, def_flags);
     if (pCamera && !pCamera->Connected)
     {
-        wxStaticText *pNotConnected = new wxStaticText(
-            m_pParent, wxID_ANY, _("Camera is not connected.  Property controls may change if you connect to it first."));
+        wxStaticText *pNotConnected = new wxStaticText(m_pParent, wxID_ANY,
+            _("Camera is not connected.  Additional camera properties may be available if you connect to it first."));
         MakeBold(pNotConnected);
         this->Add(pNotConnected, wxSizerFlags().Align(wxALIGN_CENTER_HORIZONTAL).Border(wxALL, 10));
     }
-
+    if (pCamera)
+    {
+        wxStaticBoxSizer *szSaturationGroup = new wxStaticBoxSizer(wxVERTICAL, m_pParent, _("Star Saturation Detection"));
+        szSaturationGroup->Add(GetSizerCtrl(CtrlMap, AD_szSaturationOptions), wxSizerFlags(0).Border(wxALL, 2).Expand());
+        szSaturationGroup->Layout();
+        this->Add(szSaturationGroup, def_flags);
+    }
     this->Add(pSpecGroup, wxSizerFlags(0).Border(wxALL, 10).Expand());
     this->Layout();
     Fit(m_pParent);
 }
 
-CameraConfigDialogCtrlSet *GuideCamera::GetConfigDlgCtrlSet(wxWindow *pParent, GuideCamera *pCamera,
-                                                            AdvancedDialog *pAdvancedDialog, BrainCtrlIdMap& CtrlMap)
+CameraConfigDialogCtrlSet* GuideCamera::GetConfigDlgCtrlSet(wxWindow *pParent, GuideCamera *pCamera, AdvancedDialog *pAdvancedDialog, BrainCtrlIdMap& CtrlMap)
 {
     return new CameraConfigDialogCtrlSet(pParent, pCamera, pAdvancedDialog, CtrlMap);
 }
 
-CameraConfigDialogCtrlSet::CameraConfigDialogCtrlSet(wxWindow *pParent, GuideCamera *pCamera, AdvancedDialog *pAdvancedDialog,
-                                                     BrainCtrlIdMap& CtrlMap)
-    : ConfigDialogCtrlSet(pParent, pAdvancedDialog, CtrlMap), m_pUseSubframes(nullptr)
+CameraConfigDialogCtrlSet::CameraConfigDialogCtrlSet(wxWindow *pParent, GuideCamera *pCamera, AdvancedDialog *pAdvancedDialog, BrainCtrlIdMap& CtrlMap)
+    : ConfigDialogCtrlSet(pParent, pAdvancedDialog, CtrlMap),
+      m_pUseSubframes(nullptr)
 {
     int textWidth = StringWidth(_T("0000"));
     assert(pCamera);
 
     m_pCamera = pCamera;
-    // Sub-frames
-    m_pUseSubframes = new wxCheckBox(GetParentWindow(AD_cbUseSubFrames), wxID_ANY, _("Use Subframes"));
-    AddCtrl(CtrlMap, AD_cbUseSubFrames, m_pUseSubframes,
-            _("Check to only download subframes (ROIs). Sub-frame size is equal to search region size."));
 
-    // Pixel size
+    if (m_pCamera->HasSubframes)
+    {
+        m_pUseSubframes = new wxCheckBox(GetParentWindow(AD_cbUseSubFrames), wxID_ANY, _("Use Subframes"));
+        AddCtrl(CtrlMap, AD_cbUseSubFrames, m_pUseSubframes, _("Check to only download subframes (ROIs). Sub-frame size is equal to search region size."));
+    }
+
+    // Pixel size always
     m_pPixelSize = NewSpinnerDouble(GetParentWindow(AD_szPixelSize), textWidth, m_pCamera->GetCameraPixelSize(), 0.0, 99.9, 0.1,
-                                    _("Guide camera un-binned pixel size in microns. Used with the guide telescope focal "
-                                      "length to display guiding error in arc-seconds."));
+        _("Guide camera un-binned pixel size in microns. Used with the guide telescope focal length to display guiding error in arc-seconds."));
     AddLabeledCtrl(CtrlMap, AD_szPixelSize, _("Pixel size"), m_pPixelSize, "");
 
     // Gain control
-    wxWindow *parent = GetParentWindow(AD_szGain);
-    wxStaticText *label = new wxStaticText(parent, wxID_ANY, _("Camera gain") + _(": "));
-    m_pCameraGain = NewSpinnerInt(parent, textWidth, 100, 0, 100, 1);
-    m_pCameraGain->SetToolTip(
-        /* xgettext:no-c-format */ _("Camera gain, default = 95%, lower if you experience noise or wish to guide on a very "
-                                     "bright star. Not available on all cameras."));
-    m_resetGain =
-        new wxButton(GetParentWindow(AD_szGain), wxID_ANY, _("Reset"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT);
-    m_resetGain->SetToolTip(_("Reset gain to camera's default value (disabled when camera is not connected)"));
-    m_resetGain->Bind(wxEVT_COMMAND_BUTTON_CLICKED,
-                      [this](wxCommandEvent& evt) { m_pCameraGain->SetValue(::pCamera->GetDefaultCameraGain()); });
-    wxBoxSizer *sizer = new wxBoxSizer(wxHORIZONTAL);
-    sizer->Add(label, wxSizerFlags().Align(wxALIGN_CENTER_VERTICAL));
-    sizer->Add(m_pCameraGain, wxSizerFlags().Align(wxALIGN_CENTER_VERTICAL));
-    sizer->Add(m_resetGain, wxSizerFlags().Align(wxALIGN_CENTER_VERTICAL));
-    AddGroup(CtrlMap, AD_szGain, sizer);
+    if (m_pCamera->HasGainControl)
+    {
+        wxWindow *parent = GetParentWindow(AD_szGain);
+        wxStaticText *label = new wxStaticText(parent, wxID_ANY, _("Camera gain") + _(": "));
+        m_pCameraGain = NewSpinnerInt(parent, textWidth, 100, 0, 100, 1);
+        m_pCameraGain->SetToolTip(
+            /* xgettext:no-c-format */ _("Camera gain, default = 95%, lower if you experience noise or wish to guide on a very bright star. Not available on all cameras."));
+        m_resetGain = new wxButton(GetParentWindow(AD_szGain), wxID_ANY, _("Reset"), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT);
+        m_resetGain->SetToolTip(_("Reset gain to camera's default value (disabled when camera is not connected)"));
+        m_resetGain->Bind(wxEVT_COMMAND_BUTTON_CLICKED, [this](wxCommandEvent& evt) {
+                m_pCameraGain->SetValue(::pCamera->GetDefaultCameraGain());
+            }
+        );
+        wxBoxSizer *sizer = new wxBoxSizer(wxHORIZONTAL);
+        sizer->Add(label, wxSizerFlags().Align(wxALIGN_CENTER_VERTICAL));
+        sizer->Add(m_pCameraGain, wxSizerFlags().Align(wxALIGN_CENTER_VERTICAL));
+        sizer->Add(m_resetGain, wxSizerFlags().Align(wxALIGN_CENTER_VERTICAL));
+        AddGroup(CtrlMap, AD_szGain, sizer);
+    }
 
     // Binning
     m_binning = 0;
-    wxArrayString opts;
-    m_pCamera->GetBinningOpts(&opts);
-    int width = StringArrayWidth(opts);
-    m_binning = new wxChoice(GetParentWindow(AD_szBinning), wxID_ANY, wxDefaultPosition, wxSize(width + 35, -1), opts);
-    AddLabeledCtrl(CtrlMap, AD_szBinning, _("Binning"), m_binning, _("Camera pixel binning"));
+    if (m_pCamera->MaxBinning > 1)
+    {
+        wxArrayString opts;
+        m_pCamera->GetBinningOpts(&opts);
+        int width = StringArrayWidth(opts);
+        m_binning = new wxChoice(GetParentWindow(AD_szBinning), wxID_ANY, wxDefaultPosition,
+            wxSize(width + 35, -1), opts);
+        AddLabeledCtrl(CtrlMap, AD_szBinning, _("Binning"), m_binning, _("Camera pixel binning"));
+    }
 
     // Delay parameter
     if (m_pCamera->HasDelayParam)
@@ -946,45 +950,47 @@ CameraConfigDialogCtrlSet::CameraConfigDialogCtrlSet(wxWindow *pParent, GuideCam
     if (m_pCamera->HasPortNum)
     {
         wxString port_choices[] = {
-            _T("Port 378"), _T("Port 3BC"), _T("Port 278"), _T("COM1"),  _T("COM2"),  _T("COM3"),  _T("COM4"),
-            _T("COM5"),     _T("COM6"),     _T("COM7"),     _T("COM8"),  _T("COM9"),  _T("COM10"), _T("COM11"),
-            _T("COM12"),    _T("COM13"),    _T("COM14"),    _T("COM15"), _T("COM16"),
+            _T("Port 378"), _T("Port 3BC"), _T("Port 278"), _T("COM1"), _T("COM2"), _T("COM3"), _T("COM4"),
+            _T("COM5"), _T("COM6"), _T("COM7"), _T("COM8"), _T("COM9"), _T("COM10"), _T("COM11"), _T("COM12"),
+            _T("COM13"), _T("COM14"), _T("COM15"), _T("COM16"),
         };
 
-        width = StringArrayWidth(port_choices, WXSIZEOF(port_choices));
-        m_pPortNum = new wxChoice(GetParentWindow(AD_szPort), wxID_ANY, wxDefaultPosition, wxSize(width + 35, -1),
-                                  WXSIZEOF(port_choices), port_choices);
+        int width = StringArrayWidth(port_choices, WXSIZEOF(port_choices));
+        m_pPortNum = new wxChoice(GetParentWindow(AD_szPort), wxID_ANY, wxDefaultPosition,
+            wxSize(width + 35, -1), WXSIZEOF(port_choices), port_choices);
         AddLabeledCtrl(CtrlMap, AD_szPort, _("LE Port"), m_pPortNum, _("Port number for long-exposure control"));
     }
 
-    // Cooler
-    wxSizer *sz = new wxBoxSizer(wxHORIZONTAL);
-    m_coolerOn = new wxCheckBox(GetParentWindow(AD_szCooler), wxID_ANY, _("Cooler On"));
-    m_coolerOn->SetToolTip(_("Turn camera cooler on or off"));
-    sz->Add(m_coolerOn, wxSizerFlags().Align(wxALIGN_CENTER_VERTICAL).Border(wxRIGHT));
-    m_coolerSetpt = NewSpinnerInt(GetParentWindow(AD_szDelay), textWidth, 5, -99, 99, 1);
-    wxSizer *szt = MakeLabeledControl(AD_szCooler, _("Set Temperature"), m_coolerSetpt, _("Cooler setpoint temperature"));
-    sz->Add(szt, wxSizerFlags().Align(wxALIGN_CENTER_VERTICAL));
-    AddGroup(CtrlMap, AD_szCooler, sz);
+    // Cooler settings
+    if (m_pCamera->HasCooler)
+    {
+        wxSizer *sz = new wxBoxSizer(wxHORIZONTAL);
+        m_coolerOn = new wxCheckBox(GetParentWindow(AD_szCooler), wxID_ANY, _("Cooler On"));
+        m_coolerOn->SetToolTip(_("Turn camera cooler on or off"));
+        sz->Add(m_coolerOn, wxSizerFlags().Align(wxALIGN_CENTER_VERTICAL).Border(wxRIGHT));
+        m_coolerSetpt = NewSpinnerInt(GetParentWindow(AD_szDelay), textWidth, 5, -99, 99, 1);
+        wxSizer *szt = MakeLabeledControl(AD_szCooler, _("Set Temperature"), m_coolerSetpt, _("Cooler setpoint temperature"));
+        sz->Add(szt, wxSizerFlags().Align(wxALIGN_CENTER_VERTICAL));
+        AddGroup(CtrlMap, AD_szCooler, sz);
+    }
 
     // Max ADU and related saturation choices in a single group
-    width = StringWidth(_T("65535"));
-    parent = GetParentWindow(AD_szSaturationOptions);
+    int width = StringWidth(_T("65535"));
+    wxWindow* parent = GetParentWindow(AD_szSaturationOptions);
     m_camSaturationADU = new wxTextCtrl(parent, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(1.5 * width, -1));
-    m_camSaturationADU->SetToolTip(
-        _("ADU level to determine saturation - 65535 for most 16-bit cameras, or 255 for 8-bit cameras."));
+    m_camSaturationADU->SetToolTip(_("ADU level to determine saturation - 65535 for most 16-bit cameras, or 255 for 8-bit cameras."));
     m_SaturationByADU = new wxRadioButton(parent, wxID_ANY, _("Saturation by Max-ADU value:"));
     m_SaturationByADU->SetToolTip(_("Identify star saturation based on camera maximum-ADU value (recommended)"));
     m_SaturationByADU->Bind(wxEVT_COMMAND_RADIOBUTTON_SELECTED, &CameraConfigDialogCtrlSet::OnSaturationChoiceChanged, this);
-    wxStaticBoxSizer *szADUGroup = new wxStaticBoxSizer(wxHORIZONTAL, parent, wxEmptyString);
+    wxStaticBoxSizer* szADUGroup = new wxStaticBoxSizer(wxHORIZONTAL, parent,
+        wxEmptyString);
     szADUGroup->Add(m_SaturationByADU, wxSizerFlags().Border(wxTOP, 2));
     szADUGroup->Add(m_camSaturationADU, wxSizerFlags().Border(wxLEFT, 6));
 
     m_SaturationByProfile = new wxRadioButton(parent, wxID_ANY, _("Saturation via star-profile"));
     m_SaturationByProfile->SetToolTip(_("Identify star saturation based on flat-topped profile, regardless of brightness"));
-    m_SaturationByProfile->Bind(wxEVT_COMMAND_RADIOBUTTON_SELECTED, &CameraConfigDialogCtrlSet::OnSaturationChoiceChanged,
-                                this);
-    wxFlexGridSizer *szSaturationGroup = new wxFlexGridSizer(1, 2, 5, 15);
+    m_SaturationByProfile->Bind(wxEVT_COMMAND_RADIOBUTTON_SELECTED, &CameraConfigDialogCtrlSet::OnSaturationChoiceChanged, this);
+    wxFlexGridSizer* szSaturationGroup = new wxFlexGridSizer(1, 2, 5, 15);
 
     szSaturationGroup->Add(szADUGroup, wxSizerFlags().Border(wxALL, 3).Align(wxALIGN_CENTER_VERTICAL));
     szSaturationGroup->Add(m_SaturationByProfile, wxSizerFlags(0).Border(wxLEFT, 70).Expand().Align(wxALIGN_CENTER_VERTICAL));
@@ -993,9 +999,8 @@ CameraConfigDialogCtrlSet::CameraConfigDialogCtrlSet(wxWindow *pParent, GuideCam
     // Watchdog timeout
     m_timeoutVal = NewSpinnerInt(GetParentWindow(AD_szCameraTimeout), textWidth, 5, 5, 9999, 1);
     AddLabeledCtrl(CtrlMap, AD_szCameraTimeout, _("Disconnect nonresponsive          \ncamera after (seconds)"), m_timeoutVal,
-                   wxString::Format(_("The camera will be disconnected if it fails to respond for this long. "
-                                      "The default value, %d seconds, should be appropriate for most cameras."),
-                                    DefaultGuideCameraTimeoutMs / 1000));
+        wxString::Format(_("The camera will be disconnected if it fails to respond for this long. "
+        "The default value, %d seconds, should be appropriate for most cameras."), DefaultGuideCameraTimeoutMs / 1000));
 }
 
 void CameraConfigDialogCtrlSet::OnSaturationChoiceChanged(wxCommandEvent& event)
@@ -1016,20 +1021,11 @@ void CameraConfigDialogCtrlSet::LoadValues()
     {
         m_pUseSubframes->SetValue(m_pCamera->UseSubframes);
     }
-    else
-    {
-        m_pUseSubframes->Enable(false);
-    }
 
     if (m_pCamera->HasGainControl)
     {
         m_pCameraGain->SetValue(m_pCamera->GetCameraGain());
         m_resetGain->Enable(m_pCamera->Connected);
-    }
-    else
-    {
-        m_pCameraGain->Enable(false);
-        m_resetGain->Enable(false);
     }
 
     if (m_binning)
@@ -1040,8 +1036,6 @@ void CameraConfigDialogCtrlSet::LoadValues()
         // don't allow binning change when calibrating or guiding
         m_binning->Enable(!pFrame->pGuider || !pFrame->pGuider->IsCalibratingOrGuiding());
     }
-    else
-        m_binning->Enable(false);
 
     m_timeoutVal->SetValue(m_pCamera->GetTimeoutMs() / 1000);
 
@@ -1089,52 +1083,52 @@ void CameraConfigDialogCtrlSet::LoadValues()
         case 0x278:
             m_pPortNum->SetSelection(2);
             break;
-        case 1: // COM1
+        case 1:  // COM1
             m_pPortNum->SetSelection(3);
             break;
-        case 2: // COM2
+        case 2:  // COM2
             m_pPortNum->SetSelection(4);
             break;
-        case 3: // COM3
+        case 3:  // COM3
             m_pPortNum->SetSelection(5);
             break;
-        case 4: // COM4
+        case 4:  // COM4
             m_pPortNum->SetSelection(6);
             break;
-        case 5: // COM5
+        case 5:  // COM5
             m_pPortNum->SetSelection(7);
             break;
-        case 6: // COM6
+        case 6:  // COM6
             m_pPortNum->SetSelection(8);
             break;
-        case 7: // COM7
+        case 7:  // COM7
             m_pPortNum->SetSelection(9);
             break;
-        case 8: // COM8
+        case 8:  // COM8
             m_pPortNum->SetSelection(10);
             break;
-        case 9: // COM9
+        case 9:  // COM9
             m_pPortNum->SetSelection(11);
             break;
-        case 10: // COM10
+        case 10:  // COM10
             m_pPortNum->SetSelection(12);
             break;
-        case 11: // COM11
+        case 11:  // COM11
             m_pPortNum->SetSelection(13);
             break;
-        case 12: // COM12
+        case 12:  // COM12
             m_pPortNum->SetSelection(14);
             break;
-        case 13: // COM13
+        case 13:  // COM13
             m_pPortNum->SetSelection(15);
             break;
-        case 14: // COM14
+        case 14:  // COM14
             m_pPortNum->SetSelection(16);
             break;
-        case 15: // COM15
+        case 15:  // COM15
             m_pPortNum->SetSelection(17);
             break;
-        case 16: // COM16
+        case 16:  // COM16
             m_pPortNum->SetSelection(18);
             break;
         default:
@@ -1146,13 +1140,13 @@ void CameraConfigDialogCtrlSet::LoadValues()
     }
 
     double pxSize;
-    if (m_pCamera->GetDevicePixelSize(&pxSize)) // true=>error
+    if (m_pCamera->GetDevicePixelSize(&pxSize))         // true=>error
     {
         pxSize = m_pCamera->GetCameraPixelSize();
         m_pPixelSize->Enable(!pFrame->CaptureActive);
     }
     else
-        m_pPixelSize->Enable(false); // Got a device-level pixel size, disable the control
+        m_pPixelSize->Enable(false);                // Got a device-level pixel size, disable the control
 
     m_pPixelSize->SetValue(pxSize);
 
@@ -1177,16 +1171,11 @@ void CameraConfigDialogCtrlSet::LoadValues()
             {
                 setpt = pConfig->Profile.GetDouble("/camera/CoolerSetpt", 10.0);
             }
-            m_coolerSetpt->SetValue((int) floor(setpt));
+            m_coolerSetpt->SetValue((int)floor(setpt));
         }
 
         m_coolerOn->Enable(ok);
         m_coolerSetpt->Enable(ok);
-    }
-    else
-    {
-        m_coolerOn->Enable(false);
-        m_coolerSetpt->Enable(false);
     }
 }
 
@@ -1196,14 +1185,8 @@ void CameraConfigDialogCtrlSet::UnloadValues()
 
     if (m_pCamera->HasSubframes)
     {
-        bool oldVal = m_pCamera->UseSubframes;
-        bool newVal = m_pUseSubframes->GetValue();
-        m_pCamera->UseSubframes = newVal;
-        pConfig->Profile.SetBoolean("/camera/UseSubframes", newVal);
-        // MultiStar can't track secondary star locations during periods when subframes are used
-        if (oldVal && !newVal)
-            if (pFrame->pGuider->GetMultiStarMode())
-                pFrame->pGuider->SetMultiStarMode(true); // Will force a refresh of secondary stars
+        m_pCamera->UseSubframes = m_pUseSubframes->GetValue();
+        pConfig->Profile.SetBoolean("/camera/UseSubframes", m_pCamera->UseSubframes);
     }
 
     if (m_pCamera->HasGainControl)
@@ -1216,7 +1199,7 @@ void CameraConfigDialogCtrlSet::UnloadValues()
         int oldBin = m_pCamera->Binning;
         int newBin = m_binning->GetSelection() + 1;
         if (oldBin != newBin)
-            pFrame->pAdvancedDialog->FlagImageScaleChange();
+            pFrame->pAdvancedDialog->MakeImageScaleAdjustments();           // Do this now to preserve old (device value) and new (UI value) for scale adjustment
         m_pCamera->SetBinning(m_binning->GetSelection() + 1);
     }
 
@@ -1258,11 +1241,8 @@ void CameraConfigDialogCtrlSet::UnloadValues()
 
     double oldPxSz = m_pCamera->GetCameraPixelSize();
     double newPxSz = m_pPixelSize->GetValue();
-    if (oldPxSz != newPxSz &&
-        pFrame->pAdvancedDialog->PercentChange(oldPxSz, newPxSz) >
-            5.0) // Avoid rounding problems with floating point equality test; don't clear
-                 // calibration for inconsequential changes
-        pFrame->pAdvancedDialog->FlagImageScaleChange();
+    if (oldPxSz != newPxSz)
+        pFrame->pAdvancedDialog->MakeImageScaleAdjustments();       // Preserve old (device value) and new (UI value) for scale adjustment
     m_pCamera->SetCameraPixelSize(m_pPixelSize->GetValue());
 
     bool saturationByADU = m_SaturationByADU->GetValue();
@@ -1340,12 +1320,15 @@ wxString GuideCamera::GetSettingsSummary()
     else
         pixelSizeStr = wxString::Format(_("%0.1f um"), m_pixelSize);
 
-    return wxString::Format("Camera = %s%s%s%s, full size = %d x %d, %s, %s, pixel size = %s\n", Name,
+    return wxString::Format("Camera = %s%s%s%s, full size = %d x %d, %s, %s, pixel size = %s\n",
+                            Name,
                             HasGainControl ? wxString::Format(", gain = %d", GuideCameraGain) : "",
                             HasDelayParam ? wxString::Format(", delay = %d", ReadDelay) : "",
-                            HasPortNum ? wxString::Format(", port = 0x%hx", Port) : "", FullSize.GetWidth(),
-                            FullSize.GetHeight(), darkDur ? wxString::Format("have dark, dark dur = %d", darkDur) : "no dark",
-                            CurrentDefectMap ? "defect map in use" : "no defect map", pixelSizeStr);
+                            HasPortNum ? wxString::Format(", port = 0x%hx", Port) : "",
+                            FullSize.GetWidth(), FullSize.GetHeight(),
+                            darkDur ? wxString::Format("have dark, dark dur = %d", darkDur) : "no dark",
+                            CurrentDefectMap ? "defect map in use" : "no defect map",
+                            pixelSizeStr);
 }
 
 void GuideCamera::AddDark(usImage *dark)
@@ -1480,21 +1463,21 @@ void GuideCamera::DisconnectWithAlert(CaptureFailType type)
         break;
 
     case CAPT_FAIL_TIMEOUT:
-    {
-        wxString msg;
-        // Dark library exposure times won't match the selected exposure time in the pull-down menu of the main window
-        if (!ShutterClosed)
-            msg = (wxString::Format(
-                _("After %.1f sec the camera has not completed a %.1f sec exposure, so "
-                  "it has been disconnected to prevent other problems. Refer to Trouble-shooting section of Help."),
-                (pFrame->RequestedExposureDuration() + m_timeoutMs) / 1000., pFrame->RequestedExposureDuration() / 1000.));
-        else
-            msg = _("The camera has not completed an exposure in at least 15 seconds, so "
-                    "it has been disconnected to prevent other problems. Refer to Trouble-shooting section of Help.");
+        {
+            wxString msg;
+            // Dark library exposure times won't match the selected exposure time in the pull-down menu of the main window
+            if (!ShutterClosed)
+                msg = (wxString::Format(_("After %.1f sec the camera has not completed a %.1f sec exposure, so "
+                "it has been disconnected to prevent other problems. Refer to Trouble-shooting section of Help."),
+                (pFrame->RequestedExposureDuration() + m_timeoutMs) / 1000.,
+                pFrame->RequestedExposureDuration() / 1000.));
+            else
+                msg = _("The camera has not completed an exposure in at least 15 seconds, so "
+                "it has been disconnected to prevent other problems. Refer to Trouble-shooting section of Help.");
 
-        DisconnectWithAlert(msg, RECONNECT);
-    }
-    break;
+            DisconnectWithAlert(msg, RECONNECT);
+        }
+        break;
     }
 }
 
@@ -1515,12 +1498,13 @@ void GuideCamera::DisconnectWithAlert(const wxString& msg, ReconnectType reconne
     }
     else
     {
-        pFrame->Alert(msg + "\n" +
-                      _("The camera has been disconnected. Please resolve the problem and re-connect the camera."));
+        pFrame->Alert(msg + "\n" + _("The camera has been disconnected. Please resolve the problem and re-connect the camera."));
     }
 }
 
-void GuideCamera::InitCapture() { }
+void GuideCamera::InitCapture()
+{
+}
 
 bool GuideCamera::Capture(GuideCamera *camera, int duration, usImage& img, int captureOptions, const wxRect& subframe)
 {
